@@ -38,7 +38,14 @@ minetest.register_chatcommand("bifrost", {
 			teleportee = minetest.get_player_by_name(name)
 			if teleportee then
 				local pos1 = teleportee:get_pos()
-				teleportee:set_physics_override({
+				local objs = minetest.get_objects_inside_radius(pos1, 4)
+
+				-- abort if no scan results were found
+				if next(objs) == nil then return false end
+				for _, obj in pairs(objs) do
+					-- "" is returned if it is not a player; "" ~= nil; so only handle objects with foundname ~= ""
+
+				obj:set_physics_override({
 						gravity=-.5, speed = 0
 
 					})
@@ -54,6 +61,7 @@ minetest.register_chatcommand("bifrost", {
             maxacc = {x = 0, y = 6, z = 0},
             minexptime = 7,
             maxexptime = 7,
+						glow = 4,
             minsize = 12,
 						vertical = true,
             maxsize = 12,
@@ -71,6 +79,7 @@ minetest.register_chatcommand("bifrost", {
 				maxacc = {x = 0, y = -6, z = 0},
 				minexptime = 4,
 				maxexptime = 4,
+				glow = 4,
 				minsize = 12,
 				vertical = true,
 				maxsize = 12,
@@ -78,17 +87,18 @@ minetest.register_chatcommand("bifrost", {
 				collisiondetection = false
 })
 		minetest.after(4, function()
-			teleportee:set_physics_override({
+			obj:set_physics_override({
 					gravity= 1,})
 --We change the gravity back to normal two seconds before teleporting to allow them to slow down - otherwise they fly into the air after being teleported, and will die when they hit the ground (unless there's something above them, or water below.)
 				minetest.after(2, function()
-					teleportee:set_physics_override({
+					obj:set_physics_override({
 							speed = 1 })
-							teleportee:set_pos(p)
+							obj:set_pos(p)
 
 				return true, "Teleporting to "..minetest.pos_to_string(p)
 end)
 		end)
+end
 end
 end
 		local teleportee = nil
@@ -104,7 +114,14 @@ end
 		end
 		if teleportee and p then
 			local pos1 = teleportee:get_pos()
-			teleportee:set_physics_override({
+			local objs = minetest.get_objects_inside_radius(pos1, 4)
+
+			-- abort if no scan results were found
+			if next(objs) == nil then return false end
+			for _, obj in pairs(objs) do
+				-- "" is returned if it is not a player; "" ~= nil; so only handle objects with foundname ~= ""
+
+			obj:set_physics_override({
 					gravity=-.5, speed = 0
 
 				})
@@ -120,6 +137,7 @@ end
 					maxacc = {x = 0, y = 6, z = 0},
 					minexptime = 7,
 					maxexptime = 7,
+					glow = 4,
 					minsize = 12,
 					vertical = true,
 					maxsize = 12,
@@ -137,6 +155,7 @@ end
 			maxacc = {x = 0, y = -6, z = 0},
 			minexptime = 4,
 			maxexptime = 4,
+			glow = 4,
 			minsize = 12,
 			vertical = true,
 			maxsize = 12,
@@ -144,17 +163,18 @@ end
 			collisiondetection = false
 })
 	minetest.after(4, function()
-		teleportee:set_physics_override({
+		obj:set_physics_override({
 				gravity= 1,})
 --We change the gravity back to normal two seconds before teleporting to allow them to slow down - otherwise they fly into the air after being teleported, and will die when they hit the ground (unless there's something above them, or water below.)
 			minetest.after(2, function()
-				teleportee:set_physics_override({
+				obj:set_physics_override({
 						speed = 1 })
-						teleportee:set_pos(p)
+						obj:set_pos(p)
 			return true, "Teleporting to " .. target_name
 					.. " at "..minetest.pos_to_string(p)
 		end)
 	end)
+end
 	end
 		if not minetest.check_player_privs(name, {bring=true}) then
 			return false, "You don't have permission to teleport other players (missing bring privilege)"
@@ -171,7 +191,14 @@ end
 		end
 		if teleportee and p.x and p.y and p.z then
 			local pos1 = teleportee:get_pos()
-			teleportee:set_physics_override({
+			local objs = minetest.get_objects_inside_radius(pos1, 4)
+
+			-- abort if no scan results were found
+			if next(objs) == nil then return false end
+			for _, obj in pairs(objs) do
+				-- "" is returned if it is not a player; "" ~= nil; so only handle objects with foundname ~= ""
+
+			obj:set_physics_override({
 					gravity=-.5, speed = 0
 
 				})
@@ -187,6 +214,7 @@ end
 					maxacc = {x = 0, y = 6, z = 0},
 					minexptime = 7,
 					maxexptime = 7,
+					glow = 4,
 					minsize = 12,
 					vertical = true,
 					maxsize = 12,
@@ -204,6 +232,7 @@ end
 			maxacc = {x = 0, y = -6, z = 0},
 			minexptime = 4,
 			maxexptime = 4,
+			glow = 4,
 			minsize = 12,
 			vertical = true,
 			maxsize = 12,
@@ -211,18 +240,19 @@ end
 			collisiondetection = false
 })
 	minetest.after(4, function()
-		teleportee:set_physics_override({
+		obj:set_physics_override({
 				gravity= 1,})
 --We change the gravity back to normal two seconds before teleporting to allow them to slow down - otherwise they fly into the air after being teleported, and will die when they hit the ground (unless there's something above them, or water below.)
 			minetest.after(2, function()
-				teleportee:set_physics_override({
+				obj:set_physics_override({
 						speed = 1 })
-						teleportee:set_pos(p)
+						obj:set_pos(p)
 			return true, "Teleporting " .. teleportee_name
 					.. " to " .. minetest.pos_to_string(p)
 		end)
 	end)
 	end
+end
 		local teleportee = nil
 		local p = nil
 		local teleportee_name = nil
@@ -243,7 +273,14 @@ end
 		if teleporteepos and p then
 			local node = minetest.get_node(teleporteepos)
 			local pos1 = teleportee:get_pos()
-			teleportee:set_physics_override({
+			local objs = minetest.get_objects_inside_radius(pos1, 4)
+
+			-- abort if no scan results were found
+			if next(objs) == nil then return false end
+			for _, obj in pairs(objs) do
+				-- "" is returned if it is not a player; "" ~= nil; so only handle objects with foundname ~= ""
+
+			obj:set_physics_override({
 					gravity=-.5, speed = 0
 
 				})
@@ -259,6 +296,7 @@ end
 					maxacc = {x = 0, y = 6, z = 0},
 					minexptime = 7,
 					maxexptime = 7,
+					glow = 4,
 					minsize = 12,
 					vertical = true,
 					maxsize = 12,
@@ -276,6 +314,7 @@ end
 			maxacc = {x = 0, y = -6, z = 0},
 			minexptime = 4,
 			maxexptime = 4,
+			glow = 4,
 			minsize = 12,
 			vertical = true,
 			maxsize = 12,
@@ -283,13 +322,13 @@ end
 			collisiondetection = false
 })
 	minetest.after(4, function()
-		teleportee:set_physics_override({
+		obj:set_physics_override({
 				gravity= 1,})
 --We change the gravity back to normal two seconds before teleporting to allow them to slow down - otherwise they fly into the air after being teleported, and will die when they hit the ground (unless there's something above them, or water below.)
 			minetest.after(2, function()
-				teleportee:set_physics_override({
+				obj:set_physics_override({
 						speed = 1 })
-						teleportee:set_pos(p)
+						obj:set_pos(p)
 
 			return true, "Teleporting " .. teleportee_name
 					.. " to " .. target_name
@@ -301,5 +340,5 @@ end
 	end
 end
 
-
+end
 })
