@@ -1,7 +1,7 @@
 minetest.register_chatcommand("bifrost", {
 	params = "<X>,<Y>,<Z> | <to_name> | (<name> <X>,<Y>,<Z>) | (<name> <to_name>)",
 	description = "Teleport to position or player",
-	privs = {interact=true},
+	privs = {teleport=true},
 	func = function(name, param)
 		-- Returns (pos, true) if found, otherwise (pos, false)
 		local function find_free_position_near(pos)
